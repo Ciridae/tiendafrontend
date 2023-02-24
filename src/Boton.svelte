@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { getContext } from "svelte";
+    import { data } from "./store";
 
     export let tipo = "insertar";
     export let documento = {};
@@ -9,7 +10,6 @@
     let handler = () => {};
 
     function insertar() {
-        console.log("Insertar");
         let opciones = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -17,12 +17,11 @@
         };
         fetch(URL.articulos, opciones)
             .then((res) => res.json())
-            .then((datos) => console.log(datos))
+            .then(doc => $data = [...$data, doc])
             .catch((error) => console.log(error));
     }
 
     function modificar() {
-        console.log("Modificar");
         let opciones = {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -35,13 +34,12 @@
     }
 
     function eliminar() {
-        console.log("Eliminar");
         let opciones = {
             method: "DELETE",
         };
         fetch(URL.articulos + documento._id, opciones)
             .then((res) => res.json())
-            .then((datos) => console.log(datos))
+            .then($data = $data.filter(doc => doc._id != documento._id))
             .catch((error) => console.log(error));
     }
 
